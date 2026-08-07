@@ -1,0 +1,13 @@
+{
+    "name": "md",
+    "description": "M/MUMPS in D - A port of RFC to D language",
+    "authors": ["Mark J. Andrews"],
+    "license": "AGPL-3.0-or-later",
+    "version": "0.1.0",
+    "dependencies": {},
+    "targetType": "executable",
+    "targetName": "md",
+    "sourcePaths": ["src"],
+    "mainSourceFile": "src/main.d",
+    "dflags": ["-g", "-w"]
+}
