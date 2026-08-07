@@ -9,5 +9,7 @@
     "targetName": "md",
     "sourcePaths": ["src"],
     "mainSourceFile": "src/main.d",
-    "dflags": ["-g", "-w"]
+    "dflags": ["-g", "-w"],
+    "dmdflags": [],
+    "ldcflags": []
 }
