@@ -15,19 +15,19 @@ AGPL-3.0-or-later (same as RSM and RFC)
 ## Building
 
 ```bash
-dub build
+dub build --compiler=ldc2
 ```
 
 ## Running
 
 ```bash
-dub run
+dub run --compiler=ldc2
 ```
 
 ## Testing
 
 ```bash
-dub test
+dub test --compiler=ldc2
 ```
 
 ## Project Structure
@@ -35,29 +35,58 @@ dub test
 ```
 md/
 ├── src/
-│   ├── main.d          # Main entry point
-│   ├── runtime.d       # MUMPS runtime
-│   ├── interpreter.d   # MUMPS interpreter
-│   ├── compiler.d      # MUMPS compiler
-│   ├── database.d      # Database engine
-│   ├── symbol.d        # Symbol table
-│   ├── io.d            # I/O operations
-│   └── util.d          # Utility functions
-├── dub.json            # D package manager config
-├── README.md           # This file
-└── LICENSE             # License file
+│   ├── main.d              # Main entry point
+│   ├── opcode.d            # MUMPS opcode definitions
+│   ├── runtime.d           # Runtime interpreter
+│   ├── lexer.d             # MUMPS lexer
+│   ├── parser.d            # MUMPS parser
+│   ├── parser_full.d       # Full MUMPS parser (all 22 commands)
+│   ├── database.d          # Database engine
+│   ├── database_persist.d  # Database persistence
+│   ├── database_optimized.d # Optimized database engine
+│   ├── symbol.d            # Symbol table
+│   ├── io.d                # I/O operations
+│   ├── integrated.d        # Integrated runtime
+│   ├── conformance.d       # Conformance tests
+│   ├── conformance_full.d  # Full conformance tests
+│   ├── conformance_complete.d # Complete conformance tests
+│   ├── mumps_features.d    # Additional features
+│   ├── thread_safe.d       # Thread-safe wrappers
+│   └── benchmark.d         # Performance benchmarks
+├── docs/
+│   ├── api.md              # API documentation
+│   └── porting_todo.md     # Porting todo list
+├── examples/
+│   ├── hello.mumps         # Hello World
+│   ├── factorial.mumps     # Factorial calculation
+│   ├── fibonacci.mumps     # Fibonacci sequence
+│   ├── database.mumps      # Database operations
+│   ├── sorting.mumps       # Sorting algorithms
+│   └── string_ops.mumps    # String operations
+├── CHANGELOG.md            # Changelog
+├── dub.json                # D package manager config
+└── README.md               # This file
 ```
 
-## Goals
+## Features
 
-- Full MUMPS ANSI/ISO standard compliance
-- High performance
-- Modern D language features
-- Cross-platform support
+- **Full MUMPS Parser**: All 22 MUMPS commands supported
+- **Database Engine**: With persistence and optimization
+- **Symbol Table**: Local and global variable support
+- **I/O Operations**: Terminal, file, socket, pipe I/O
+- **Pattern Matching**: Full MUMPS pattern matching
+- **Math Functions**: $RANDOM, $PI, etc.
+- **String Functions**: $ASCII, $CHAR, $LENGTH, $EXTRACT, $FIND, $PIECE, $TRANSLATE, $JUSTIFY
+- **Special Variables**: $SYSTEM, $IO, $JOB, etc.
+- **Thread Safety**: Thread-safe wrappers for all components
+- **Performance**: Optimized database engine with fast paths
+- **Conformance**: 43 test categories, 240+ tests
 
 ## Status
 
-Early development. Basic runtime and interpreter implemented.
+**Version 0.1.0** - Initial release
+
+All core MUMPS operations implemented and tested.
 
 ## References
 
