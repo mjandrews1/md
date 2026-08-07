@@ -9,139 +9,61 @@ module main;
 
 import std.stdio;
 import std.string;
-
-/// MUMPS Runtime
-struct MumpsRuntime {
-    string[string] variables;
-    bool running;
-    
-    void start() {
-        running = true;
-    }
-    
-    void stop() {
-        running = false;
-    }
-    
-    bool isRunning() const {
-        return running;
-    }
-    
-    void setVar(string name, string value) {
-        variables[name] = value;
-    }
-    
-    string getVar(string name) {
-        if (auto ptr = name in variables) {
-            return *ptr;
-        }
-        return "";
-    }
-    
-    void killVar(string name) {
-        variables.remove(name);
-    }
-    
-    void write(string data) {
-        write(data);
-    }
-    
-    void writeNewline() {
-        writeln();
-    }
-}
-
-/// MUMPS Interpreter
-struct MumpsInterpreter {
-    MumpsRuntime* runtime;
-    
-    void execute(string code) {
-        // Parse and execute MUMPS code
-        auto parts = code.split(" ");
-        if (parts.length == 0) return;
-        
-        string command = parts[0].toUpper();
-        
-        switch (command) {
-            case "SET":
-                executeSet(parts[1..$]);
-                break;
-            case "WRITE":
-                executeWrite(parts[1..$]);
-                break;
-            case "KILL":
-                executeKill(parts[1..$]);
-                break;
-            case "HALT":
-                runtime.stop();
-                break;
-            default:
-                writeln("Unknown command: ", command);
-                break;
-        }
-    }
-    
-    private void executeSet(string[] args) {
-        if (args.length < 2) return;
-        string name = args[0];
-        string value = args[1];
-        runtime.setVar(name, value);
-    }
-    
-    private void executeWrite(string[] args) {
-        foreach (arg; args) {
-            if (arg[0] == '"') {
-                // String literal
-                write(arg[1..$-1]);
-            } else {
-                // Variable
-                write(runtime.getVar(arg));
-            }
-        }
-    }
-    
-    private void executeKill(string[] args) {
-        foreach (arg; args) {
-            runtime.killVar(arg);
-        }
-    }
-}
+import opcode;
+import runtime;
 
 void main() {
     writeln("md - M/MUMPS in D");
     writeln("A port of RFC to D language");
     writeln();
-    
+
     // Create runtime
     MumpsRuntime runtime;
     runtime.start();
-    
-    // Create interpreter
-    MumpsInterpreter interpreter = MumpsInterpreter(&runtime);
-    
+
     // Test basic operations
     writeln("Testing MUMPS operations:");
     writeln("========================");
-    
+
     // SET
-    interpreter.execute("SET X 42");
-    interpreter.execute("SET NAME John");
-    
+    runtime.setVar("X", "42");
+    runtime.setVar("NAME", "John");
+
     // WRITE
-    interpreter.execute("WRITE X");
-    writeln();
-    interpreter.execute("WRITE NAME");
-    writeln();
-    
+    runtime.write("X = ");
+    runtime.write(runtime.getVar("X"));
+    runtime.writeNewline();
+
+    runtime.write("NAME = ");
+    runtime.write(runtime.getVar("NAME"));
+    runtime.writeNewline();
+
     // Test $DATA
     writeln();
-    writeln("Variable X exists: ", runtime.getVar("X") != "");
-    writeln("Variable Y exists: ", runtime.getVar("Y") != "");
-    
+    writeln("Variable X exists: ", runtime.hasVar("X"));
+    writeln("Variable Y exists: ", runtime.hasVar("Y"));
+
     // KILL
-    interpreter.execute("KILL X");
+    runtime.killVar("X");
     writeln("After KILL X: ", runtime.getVar("X"));
-    
+
+    // Stack operations
+    writeln();
+    writeln("Stack operations:");
+    runtime.push(StackEntry.makeInteger(42));
+    runtime.push(StackEntry.makeInteger(100));
+
+    auto val1 = runtime.pop();
+    writeln("Pop: ", val1.integer);
+
+    auto val2 = runtime.pop();
+    writeln("Pop: ", val2.integer);
+
+    // Get output
+    writeln();
+    writeln("Output:");
+    writeln(runtime.getOutput());
+
     writeln();
     writeln("md is ready for MUMPS development!");
 }
